@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--bootsrtap mobile friendly-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <title><%=title%></title>
+</head>
+<body class="bg-light">
+<div class="container py-4">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-6 mx-auto">
+    <h1 class="mb-3 text-center"><%=title%></h1>
+    <p class="text-center text-muted">Data: <%= new Date().toLocaleString() %></p>
+    
+    <form action="/saveReport" method="post" class="bg-white p-4 rounded shadow-sm">
+
+<div class="form-group">
+        <label for="name" class="form-label">Nume:</label>
+        <input list="names" class="form-control" id="name" name="name" required>
+        <datalist id="names">
+            <% names.forEach(function(name) { %>
+                <option value="<%= name.name %>">
+            <% }); %>
+        </datalist>
+    </div>
+
+    <div class="mb-3">
+        <label for="message" class="form-label">Mesajul</label>
+        <textarea class="form-control" id="message" name="message" rows="3" required></textarea>
+      </div>
+
+      <div class="mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <label for="report" class="form-label mb-0">Raport</label>
+          <small class="text-muted">
+            <span id="wordCount">0</span> cuvinte
+          </small>
+        </div>
+        <textarea class="form-control" id="report" name="report" rows="14" required oninput="updateWordCount(this)"></textarea>
+      </div>
+      
+
+      <div class="mb-3 d-none">
+        <label for="createdAt" class="form-label">Data</label>
+        <input type="text" class="form-control" id="createdAt" name="createdAt" required>
+        </div>
+
+    <div class="mb-3 d-none">
+        <label for="id" class="form-label">id</label>
+        <input type="text" class="form-control" id="id" name="id" required>
+        </div>
+
+      <button type="submit" class="btn btn-primary btn-block">trimite</button>
+
+    </form>
+
+    </div>
+
+    <!--hidden data-->
+    <div id="namesData" class="d-none">
+        <%= JSON.stringify(names) %>
+    </div>
+
+    <!--bootstrap 4.5 js-->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script type="module" src="/form.js"></script>
+    
+</body>
+</html>
