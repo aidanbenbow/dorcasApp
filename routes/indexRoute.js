@@ -3,6 +3,10 @@ const router = express();
 
 import { getAllItems, updateItem } from "../config/dynamoDB.js";
 
+function countWords(text) {
+    return text.split(/\s+/).filter(word => word.length > 0).length;
+}
+
 router.get("/", async (req, res) => {
         try {
             const data = await getAllItems();
@@ -25,6 +29,10 @@ router.get("/", async (req, res) => {
 
 router.post("/saveReport", async (req, res) => {
     const {id,createdAt, name, report, message } = req.body;
+    const wordCount = countWords(report);
+    if(wordCount > 150 || wordCount < 120) {
+        return res.status(400).send(`Raportul trebuie să aibă între 120 și 150 de cuvinte. Ați trimis ${wordCount} cuvinte.`);
+    }
     try {
         await updateItem(id, createdAt, report, message);
         

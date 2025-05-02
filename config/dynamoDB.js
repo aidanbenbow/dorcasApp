@@ -22,6 +22,10 @@ export const getAllItems = async () => {
     try {
         const params = {
             TableName: TABLE_NAME,
+            FilterExpression: "attribute_not_exists(used) OR used = :false",
+            ExpressionAttributeValues: {
+                ":false": false,
+            },
         };
         const data = await docClient.send(new ScanCommand(params));
         return data;
@@ -40,10 +44,11 @@ export const updateItem = async (id, createdAt, report, message) => {
                 id: id,
                 createdAt: createdAt,
             },
-            UpdateExpression: "set report = :report, message = :message",
+            UpdateExpression: "set report = :report, message = :message, used = :used",
             ExpressionAttributeValues: {
                 ":report": report,
                 ":message": message,
+                ":used": true,
             },
         };
 

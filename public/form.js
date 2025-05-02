@@ -1,24 +1,47 @@
 const namesData = JSON.parse(document.querySelector("#namesData").textContent);
 const nameInput = document.querySelector("#name");
+const list = document.querySelector("#autocomplete-list");
+const message = document.querySelector("#message");
+const raport = document.querySelector("#report");
+const createdAt = document.querySelector("#createdAt");
+const id = document.querySelector("#id");
+const wordCount = document.querySelector("#wordCount");
+const form = document.querySelector("form");
 
-
+console.log(wordCount.textContent);
 
 nameInput.addEventListener("input", function () {
-    const selectedName = nameInput.value.toLowerCase();
-    const match = namesData.find(item => item.name.toLowerCase() === selectedName);
+    const value = this.value.toLowerCase();
+    list.innerHTML = ""; // Clear previous suggestions
 
-    if (match) {
-        document.querySelector("#report").value = match.report;
-        document.querySelector("#message").value = match.message;
-        document.querySelector("#id").value = match.id;
-        document.querySelector("#createdAt").value = match.createdAt;
-    } else {
-        document.querySelector("#report").value = "";
-        document.querySelector("#message").value = "";
-        document.querySelector("#id").value = "";
-        document.querySelector("#createdAt").value = "";
-    }
+    if (!value) return; // If input is empty, do nothing
+
+    const matches = namesData.filter(item => item.name.toLowerCase().includes(value));
+    
+    matches.forEach(item => {
+        const itemElement = document.createElement("div");
+        itemElement.classList.add("list-group-item","list-group-item-action" );
+        itemElement.textContent = item.name;
+
+        itemElement.addEventListener("click", function () {
+            nameInput.value = item.name; // Set input value to clicked suggestion
+            message.value = item.message; // Set message value to clicked suggestion
+            raport.value = item.report; // Set report value to clicked suggestion
+            createdAt.value = item.createdAt; // Set createdAt value to clicked suggestion
+            id.value = item.id; // Set id value to clicked suggestion
+
+            list.innerHTML = ""; // Clear suggestions after selection
+        });
+        list.appendChild(itemElement);
+        
+    } );
 } );
+
+document.addEventListener("click", function (event) {
+    if (!nameInput.contains(event.target) && !list.contains(event.target)) {
+        list.innerHTML = ""; // Clear suggestions if clicking outside
+    }
+});
 
 function updateWordCount(textarea) {
     const text = textarea.value;
@@ -31,3 +54,21 @@ function updateWordCount(textarea) {
 }
 
 window.updateWordCount = updateWordCount;
+
+function countWords(text) {
+    return text.split(/\s+/).filter(word => word.length > 0).length;
+}
+
+form.addEventListener("submit", function (event) {
+    
+    const report = raport.value.trim(); // Trim whitespace from the report text
+    
+    const words = countWords(report);
+
+    if (words > 150 || words < 120) {
+        event.preventDefault(); // Prevent form submission
+        alert(`Raportul trebuie să aibă între 120 și 150 de cuvinte. Ați trimis ${words} cuvinte.`);
+    }
+
+ 
+});
