@@ -1,7 +1,9 @@
 import express from "express";
 const router = express();
 
-import { getAllItems, updateItem } from "../config/dynamoDB.js";
+// import { getAllItems, updateItem } from "../config/dynamoDB.js";
+
+import db from "../config/dynamoDB.js";
 
 function countWords(text) {
     return text.split(/\s+/).filter(word => word.length > 0).length;
@@ -9,7 +11,7 @@ function countWords(text) {
 
 router.get("/", async (req, res) => {
         try {
-            const data = await getAllItems();
+            const data = await db.getAllItems();
             const names = data.Items.map(item =>{ 
                 const id = item.id;
                 const createdAt = item.createdAt;
@@ -35,7 +37,7 @@ router.post("/saveReport", async (req, res) => {
         return res.status(400).send(`Raportul trebuie să aibă între 120 și 150 de cuvinte. Ați trimis ${wordCount} cuvinte.`);
     }
     try {
-        await updateItem(id, createdAt, report, message);
+        await db.updateItem(id, createdAt, report, message);
         
         res.render('saved')
     } catch (error) {
