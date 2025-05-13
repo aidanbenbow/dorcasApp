@@ -8,34 +8,40 @@ const id = document.querySelector("#id");
 const wordCount = document.querySelector("#wordCount");
 const form = document.querySelector("form");
 
-console.log(wordCount.textContent);
-
-nameInput.addEventListener("input", function () {
-    const value = this.value.toLowerCase();
+function showSuggestions() {
+    const value = nameInput.value.toLowerCase();
     list.innerHTML = ""; // Clear previous suggestions
 
-    if (!value) return; // If input is empty, do nothing
+    const filtered = value ? namesData.filter(item => item.name.toLowerCase().includes(value)) : namesData;
 
-    const matches = namesData.filter(item => item.name.toLowerCase().includes(value));
-    
-    matches.forEach(item => {
+    filtered.forEach(item => {
         const itemElement = document.createElement("div");
         itemElement.classList.add("list-group-item","list-group-item-action" );
         itemElement.textContent = item.name;
 
-        itemElement.addEventListener("click", function () {
-            nameInput.value = item.name; // Set input value to clicked suggestion
-            message.value = item.message; // Set message value to clicked suggestion
-            raport.value = item.report; // Set report value to clicked suggestion
-            createdAt.value = item.createdAt; // Set createdAt value to clicked suggestion
-            id.value = item.id; // Set id value to clicked suggestion
+        itemElement.classList.add(item.status === 'sponsored' ? 'bg-sponsored' : 'bg-unsponsored');
 
+        itemElement.addEventListener("click", function () {
+            populateFields(item); // Populate fields with clicked suggestion
+           updateWordCount(raport, "#wordCount"); // Update word count for report textarea
+            updateWordCount(message, "#messageWordCount"); // Update word count for message textarea
             list.innerHTML = ""; // Clear suggestions after selection
         });
         list.appendChild(itemElement);
-        
     } );
-} );
+}
+
+nameInput.addEventListener("input", showSuggestions);
+nameInput.addEventListener("focus", showSuggestions);
+
+function populateFields(item) {
+    nameInput.value = item.name; // Set input value to clicked suggestion
+    message.value = item.message; // Set message value to clicked suggestion
+    raport.value = item.report; // Set report value to clicked suggestion
+    createdAt.value = item.createdAt; // Set createdAt value to clicked suggestion
+    id.value = item.id; // Set id value to clicked suggestion
+}
+
 
 document.addEventListener("click", function (event) {
     if (!nameInput.contains(event.target) && !list.contains(event.target)) {
@@ -43,17 +49,22 @@ document.addEventListener("click", function (event) {
     }
 });
 
-function updateWordCount(textarea) {
+// Function to update the word count for the message textarea
+function updateWordCount(textarea, counterId) {
     const text = textarea.value;
-    const wordCount = text.split(/\s+/).filter(word => word.length > 0).length;
-    document.querySelector("#wordCount").textContent = `Word count: ${wordCount}`;
-
-
+    const wordCount = countWords(text);
+    document.querySelector(counterId).textContent = `${wordCount}`;
     textarea.style.height = "auto"; // Reset height to auto to calculate the new height
     textarea.style.height = `${textarea.scrollHeight}px`; // Set height to the scroll height
 }
 
-window.updateWordCount = updateWordCount;
+message.addEventListener("input", function () {
+    updateWordCount(message, "#messageWordCount");
+});
+
+raport.addEventListener("input", function () {
+    updateWordCount(raport, "#wordCount");
+});
 
 function countWords(text) {
     return text.split(/\s+/).filter(word => word.length > 0).length;

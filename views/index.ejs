@@ -19,6 +19,16 @@
           cursor: pointer;
         }
 
+        .bg-sponsored{
+          background-color: #d4edda;
+        }
+        .bg-sponsored:hover{
+          background-color: #e2e6ea;
+        }
+        .bg-unsponsored{
+          background-color: #f8d7da;
+        }
+
         </style>
 
     <title><%=title%></title>
@@ -39,7 +49,12 @@
       
 
     <div class="mb-3">
+      <div class="d-flex justify-content-between align-items-center mb-1">
         <label for="message" class="form-label">Mesajul</label>
+        <small class="text-muted">
+          <span id="messageWordCount">0</span> cuvinte
+        </small>
+      </div>
         <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
       </div>
 
@@ -50,7 +65,7 @@
             <span id="wordCount">0</span> cuvinte
           </small>
         </div>
-        <textarea class="form-control" id="report" name="report" rows="14" required oninput="updateWordCount(this)"></textarea>
+        <textarea class="form-control" id="report" name="report" rows="14" required ></textarea>
       </div>
       
 

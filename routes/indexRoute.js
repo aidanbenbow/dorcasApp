@@ -16,7 +16,8 @@ router.get("/", async (req, res) => {
                 const name = item.name;
                 const report = item.report;
                 const message = item.message;
-                return {id, createdAt, name, report, message}
+                const status = item.status;
+                return {id, createdAt, name, report, message, status}
             }).sort((a, b) => a.name.localeCompare(b.name)); // Sort names alphabetically
             // Render the index page with the fetched data
             
