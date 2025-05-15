@@ -12,7 +12,7 @@ function countWords(text) {
 router.get("/", async (req, res) => {
         try {
             const data = await db.getAllItems();
-            
+
             const names = data.Items.map(item =>{ 
                 const id = item.id;
                 const createdAt = item.createdAt;

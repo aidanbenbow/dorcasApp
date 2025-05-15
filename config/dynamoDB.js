@@ -20,10 +20,10 @@ class DynamoDBService {
         try {
             const params = {
                 TableName: this.TABLE_NAME,
-                // FilterExpression: "attribute_not_exists(used) OR used = :false",
-                // ExpressionAttributeValues: {
-                //     ":false": false,
-                // },
+                FilterExpression: "attribute_not_exists(used) OR used = :false", 
+                ExpressionAttributeValues: {
+                    ":false": false,
+                },
             };
             const data = await this.docClient.send(new ScanCommand(params));
             return data;
