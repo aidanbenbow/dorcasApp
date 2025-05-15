@@ -20,18 +20,20 @@ class DynamoDBService {
         try {
             const params = {
                 TableName: this.TABLE_NAME,
-                FilterExpression: "attribute_not_exists(used) OR used = :false",
-                ExpressionAttributeValues: {
-                    ":false": false,
-                },
+                // FilterExpression: "attribute_not_exists(used) OR used = :false",
+                // ExpressionAttributeValues: {
+                //     ":false": false,
+                // },
             };
             const data = await this.docClient.send(new ScanCommand(params));
             return data;
         } catch (error) {
             console.error("Error fetching items:", error);
-            throw new Error("Could not fetch items");
+            throw new Error("Could not fetch items")
         }
     }
+
+  
 
     async updateItem(id, createdAt, report, message) {
         try {

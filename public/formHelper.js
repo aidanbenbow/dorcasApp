@@ -14,6 +14,7 @@ export class formHelper{
             message: document.querySelector(config.messageWordCountSelector),
             raport: document.querySelector(config.raportWordCountSelector),
     } 
+    
     this.setUplisteners();
 }
     setUplisteners(){
@@ -33,7 +34,7 @@ export class formHelper{
         const value = this.nameInput.value.toLowerCase();
         this.list.innerHTML = ""; // Clear previous suggestions
 
-        const filtered = value ? this.data.filter(item => item.name.toLowerCase().includes(value)) : this.data;
+        const filtered = value ? this.data.filter(item => (item.name||'').toLowerCase().includes(value)) : this.data;
 
         filtered.forEach(item => {
             const itemElement = document.createElement("div");
