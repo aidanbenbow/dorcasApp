@@ -13,18 +13,19 @@ class DynamoDBService {
             // },
         });
         this.docClient = DynamoDBDocumentClient.from(this.client);
-        this.TABLE_NAME = process.env.TABLE_NAME || "progressreports"; // Set your DynamoDB table name
+        this.TABLE_NAME = process.env.TABLE_NAME || "progress_reports_table"; // Set your DynamoDB table name
     }
 
     async getAllItems() {
         try {
             const params = {
-                TableName: this.TABLE_NAME,
-                FilterExpression: "attribute_not_exists(used) OR used = :false", 
-                ExpressionAttributeValues: {
-                    ":false": false,
-                },
-            };
+    TableName: this.TABLE_NAME,
+    FilterExpression:
+        "attribute_not_exists(reportYear) OR reportYear <> :year",
+    ExpressionAttributeValues: {
+        ":year": 26,
+    },
+};
             const data = await this.docClient.send(new ScanCommand(params));
             return data;
         } catch (error) {
@@ -40,14 +41,15 @@ class DynamoDBService {
             const params = {
                 TableName: this.TABLE_NAME,
                 Key: {
-                    id: id,
-                    createdAt: createdAt,
+                    reportId: id,
+                   // createdAt: createdAt,
                 },
-                UpdateExpression: "set report = :report, message = :message, used = :used",
+                UpdateExpression: "set report = :report, message = :message, used = :used, reportYear = :reportYear",
                 ExpressionAttributeValues: {
                     ":report": report,
                     ":message": message,
-                    ":used": true,
+                    ":used": false,
+                    ":reportYear": 26,
                 },
             };
 

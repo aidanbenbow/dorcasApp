@@ -1,6 +1,9 @@
 export class formHelper{
     constructor(config){
         this.data = JSON.parse(document.querySelector(config.dataSelector).textContent);
+       
+        this.namesinlist = this.data.map(item => item.name);
+        console.log("Names in list:", this.namesinlist); // Debug log to check names in list
          this.form = document.querySelector(config.formSelector);
         this.nameInput = document.querySelector(config.nameSelector);
         this.list = document.querySelector(config.listSelector);
@@ -40,7 +43,7 @@ export class formHelper{
             const itemElement = document.createElement("div");
             itemElement.classList.add("list-group-item","list-group-item-action" );
             itemElement.textContent = item.name;
-            itemElement.classList.add(item.status === 'sponsored' ? 'bg-sponsored' : 'bg-unsponsored');
+           // itemElement.classList.add(item.status === 'sponsored' ? 'bg-sponsored' : 'bg-unsponsored');
 
             itemElement.addEventListener("click", () => {
                 this.populateFields(item); // Populate fields with clicked suggestion

@@ -13,22 +13,20 @@ router.get("/", async (req, res) => {
         try {
             const data = await db.getAllItems();
 
-            const names = data.Items.map(item =>{ 
-                const id = item.id;
-                const createdAt = item.createdAt;
-                const name = item.name;
-                const report = item.report;
-                const message = item.message;
-                const status = item.status;
-                return {id, createdAt, name, report, message, status}
-            }).sort((a, b) =>{
-                const nameA = (a.name|| "").toLowerCase();
-                const nameB = (b.name|| "").toLowerCase();
-                const statusOrder = (a.status === "sponsored" ? -1 : 1) - (b.status === "sponsored" ? -1 : 1); // Sort by status first
-                return statusOrder !== 0 ? statusOrder : nameA.localeCompare(nameB); // Then sort by name
-            })
+            const names = data.Items
+    .map(({ id, createdAt, name, report, message, status }) => ({
+        id,
+        createdAt,
+        name,
+        report,
+        message,
+        status
+    }))
+    .sort((a, b) => (a.name || "").localeCompare(b.name || "", undefined, {
+        sensitivity: "base"
+    }));
             
-    res.render("index", { names: names, title: "Raport de Progress" });
+    res.render("index", { names: names, title: "Raporte de Progress", numar: names.length });
         } catch (error) {
             console.error("Error fetching items:", error)
         }
